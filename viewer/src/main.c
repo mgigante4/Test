@@ -326,7 +326,7 @@ static void view_chunk_tex(const NtxNoteEntry* note, uint16_t chunk_index, TeX_R
 		    if (scroll_y > max_scroll)
 		        scroll_y = max_scroll;
 		}
-		}
+		
 		if (clear_press || second_press)
 			break;
 
