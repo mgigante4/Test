@@ -1,0 +1,51 @@
+DTFT: Definitions and Common Pairs
+
+DTFT (discrete-time Fourier transform)
+
+$$X(e^{j\omega})=\sum_{n=-\infty}^{\infty}x[n]e^{-j\omega n}$$
+
+Inverse DTFT
+
+$$x[n]=\frac{1}{2\pi}\int_{-\pi}^{\pi}X(e^{j\omega})e^{j\omega n}\,d\omega$$
+
+Periodicity
+
+$$X(e^{j(\omega+2\pi)})=X(e^{j\omega})$$
+
+Frequency is measured in radians per sample.
+
+Unit impulse
+
+$$\delta[n]\Leftrightarrow 1$$
+
+Delayed unit impulse
+
+$$\delta[n-k]\Leftrightarrow e^{-j\omega k}$$
+
+Exponential with step ($|a|<1$)
+
+$$a^n u[n]\Leftrightarrow\frac{1}{1-ae^{-j\omega}}$$
+
+Matched delay
+
+$$a^{n-k}u[n-k]$$
+
+$$\Leftrightarrow\frac{e^{-j\omega k}}{1-ae^{-j\omega}}$$
+
+Unmatched delay
+
+$$a^n u[n-k]$$
+
+$$\Leftrightarrow\frac{a^k e^{-j\omega k}}{1-ae^{-j\omega}}$$
+
+Exponential cut to N samples
+
+$$x[n]=a^n(u[n]-u[n-N])$$
+
+$$X(e^{j\omega})=\frac{1-a^Ne^{-j\omega N}}{1-ae^{-j\omega}}$$
+
+Valid for complex $a$, except when the denominator is zero; at those points use the finite-sum limit.
+
+Multiplying x[n] by C multiplies its DTFT by C.
+
+Example: $\left(\frac12\right)^{n-1}=2\left(\frac12\right)^n$.

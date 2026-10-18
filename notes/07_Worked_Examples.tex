@@ -1,0 +1,51 @@
+Worked Examples: DTFT, DFT, and Folding
+
+Example 1: finite exponential
+
+$$x[n]=\left(\frac13\right)^n(u[n]-u[n-10])$$
+
+$$X(e^{j\omega})=\frac{1-(\frac13)^{10}e^{-j10\omega}}{1-\frac13e^{-j\omega}}$$
+
+Dominant frequency is 0. Weakest magnitude near pi. No exact zeros.
+
+Example 2: alternating exponential
+
+$$x[n]=\left(-\frac12\right)^nu[n]$$
+
+$$X(e^{j\omega})=\frac{1}{1+\frac12e^{-j\omega}}$$
+
+$$|X(e^{j\omega})|=\frac{1}{\sqrt{\frac54+\cos\omega}}$$
+
+Largest magnitude at pi. Smallest at 0. No zeros.
+
+Example 3: finite sine
+
+$$x[n]=\sin\left(\frac{\pi n}{10}\right),\quad -5\le n\le5$$
+
+$$D_{11}(\theta)=\frac{\sin(11\theta/2)}{\sin(\theta/2)}$$
+
+$$X(e^{j\omega})=\frac{D_{11}(\omega-\pi/10)-D_{11}(\omega+\pi/10)}{2j}$$
+
+Dominant around plus and minus pi/10; zero at 0 and pi. Peak locations are not necessarily exactly plus/minus pi/10.
+
+Example 4: 8-point DFT
+
+$$x[n]=2^n,\quad 0\le n\le7$$
+
+$$X[k]=\sum_{n=0}^{7}2^ne^{-j2\pi kn/8}$$
+
+$$X[2]=-51+102j$$
+
+For $F_s=2$ MHz:
+
+$$f_2=\frac{2(2\,\text{MHz})}{8}=0.5\,\text{MHz}$$
+
+4-point IDFT of even bins
+
+$$Y[r]=X[2r]$$
+
+$$y[n]=x[n]+x[n+4]$$
+
+$$y[n]=[17,34,68,136]$$
+
+Original and recovered sequences share indices 0 through 3, but none of their sample values are equal.

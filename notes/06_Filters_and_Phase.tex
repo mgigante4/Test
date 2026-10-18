@@ -1,0 +1,63 @@
+LTI Filters: Magnitude, Phase, and Sinusoidal Output
+
+Frequency response
+
+$$H(e^{j\omega})=\frac{Y(e^{j\omega})}{X(e^{j\omega})}$$
+
+For a causal difference-equation filter:
+
+$$H(e^{j\omega})=\frac{\sum_{k=0}^{M}b_k e^{-j\omega k}}{\sum_{k=0}^{N}a_k e^{-j\omega k}}$$
+
+Compute a complex value:
+
+$$H(e^{j\omega_0})=a+jb$$
+
+Magnitude and phase:
+
+$$A=|H(e^{j\omega_0})|=\sqrt{a^2+b^2}$$
+
+$$\phi=\arg H(e^{j\omega_0})$$
+
+Complex exponential input
+
+$$x[n]=e^{j\omega_0n}$$
+
+Steady-state output
+
+$$y[n]=H(e^{j\omega_0})e^{j\omega_0n}$$
+
+$$y[n]=Ae^{j(\omega_0n+\phi)}$$
+
+Cosine input
+
+$$x[n]=B\cos(\omega_0n+\theta)$$
+
+Steady-state output
+
+$$y[n]=BA\cos(\omega_0n+\theta+\phi)$$
+
+Sine input
+
+$$x[n]=B\sin(\omega_0n+\theta)$$
+
+Steady-state output
+
+$$y[n]=BA\sin(\omega_0n+\theta+\phi)$$
+
+Gain or loss in decibels
+
+$$G_{\text{dB}}=20\log_{10}A$$
+
+A < 1: attenuated. A > 1: amplified.
+
+Amplitude percentage change
+
+$$100(A-1)$$
+
+The value above is a percent.
+
+Phase from complex number: use atan2(Im H, Re H) or arg H. At DC, a positive real response has phase zero.
+
+Real-coefficient filters satisfy:
+
+$$H(e^{-j\omega})=H^*(e^{j\omega})$$

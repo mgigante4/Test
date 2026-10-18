@@ -1,0 +1,63 @@
+DTFT: Important Properties
+
+Use $x[n]\Leftrightarrow X(e^{j\omega})$.
+
+Linearity
+
+$$Ax[n]+By[n]\Leftrightarrow AX(e^{j\omega})+BY(e^{j\omega})$$
+
+Time delay by k
+
+$$x[n-k]\Leftrightarrow e^{-j\omega k}X(e^{j\omega})$$
+
+Time advance by k
+
+$$x[n+k]\Leftrightarrow e^{j\omega k}X(e^{j\omega})$$
+
+Frequency shift / modulation
+
+$$e^{j\omega_0n}x[n]$$
+
+$$\Leftrightarrow X(e^{j(\omega-\omega_0)})$$
+
+Time reversal
+
+$$x[-n]\Leftrightarrow X(e^{-j\omega})$$
+
+Conjugation
+
+$$x^*[n]\Leftrightarrow X^*(e^{-j\omega})$$
+
+Time multiplication
+
+$$nx[n]\Leftrightarrow j\frac{dX(e^{j\omega})}{d\omega}$$
+
+Time-domain convolution
+
+$$y[n]=\sum_{m=-\infty}^{\infty}x[m]h[n-m]$$
+
+$$Y(e^{j\omega})=X(e^{j\omega})H(e^{j\omega})$$
+
+Real-valued signal
+
+$$X(e^{-j\omega})=X^*(e^{j\omega})$$
+
+$$|X(e^{-j\omega})|=|X(e^{j\omega})|$$
+
+Even real x[n]
+
+$$x[-n]=x[n]$$
+
+$$X(e^{j\omega})=x[0]+2\sum_{n=1}^{\infty}x[n]\cos(n\omega)$$
+
+Odd real x[n]
+
+$$x[-n]=-x[n]$$
+
+$$X(e^{j\omega})=-2j\sum_{n=1}^{\infty}x[n]\sin(n\omega)$$
+
+For absolutely summable odd sequences:
+
+$$X(e^{j0})=X(e^{j\pi})=0$$
+
+Magnitude is 2-pi periodic. For real x[n], checking $0\le\omega\le\pi$ is sufficient for the magnitude.

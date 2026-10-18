@@ -1,0 +1,77 @@
+DFT, IDFT, Frequency Bins, and Aliasing
+
+N-point discrete Fourier transform
+
+$$X[k]=\sum_{n=0}^{N-1}x[n]e^{-j2\pi kn/N}$$
+
+$$0\le k<N$$
+
+N-point inverse DFT
+
+$$x[n]=\frac{1}{N}\sum_{k=0}^{N-1}X[k]e^{j2\pi kn/N}$$
+
+$$0\le n<N$$
+
+DFT samples the DTFT
+
+$$X[k]=X(e^{j\omega_k})$$
+
+$$\omega_k=\frac{2\pi k}{N}$$
+
+Frequency bin in hertz
+
+$$f_k=\frac{kF_s}{N}$$
+
+Frequency spacing
+
+$$\Delta f=\frac{F_s}{N}$$
+
+Sampling time
+
+$$T_s=\frac{1}{F_s}$$
+
+Sampling angular frequency
+
+$$\omega=\frac{2\pi f}{F_s}$$
+
+Nyquist frequency
+
+$$f_{\text{Ny}}=\frac{F_s}{2}$$
+
+Avoid aliasing of bandlimited signals when $F_s>2f_{\max}$ (with appropriate bandlimit assumptions).
+
+DFT periodicity
+
+$$X[k+N]=X[k]$$
+
+Bins above N/2 represent negative frequencies:
+
+$$f_k=\frac{(k-N)F_s}{N}$$
+
+Use this mapping for $k>N/2$.
+
+Frequency-domain undersampling
+
+Keep $M$ equally spaced bins of an N-point DFT with $N=LM$:
+
+$$Y[r]=X[Lr]$$
+
+$$0\le r<M$$
+
+M-point IDFT recovers aliased samples:
+
+$$y[n]=\sum_{q=0}^{L-1}x[n+qM]$$
+
+$$0\le n<M$$
+
+Example: N=8, M=4, L=2.
+
+$$Y[r]=X[2r]$$
+
+$$y[n]=x[n]+x[n+4]$$
+
+For $x[n]=[1,2,4,8,16,32,64,128]$:
+
+$$y[n]=[17,34,68,136]$$
+
+This result assumes the bins $X[0],X[2],X[4],X[6]$ are kept. Choosing another set of four bins can give a different answer.

@@ -1,0 +1,59 @@
+Finite Signals, Windows, and Sinc-Like DTFTs
+
+Geometric sum (r not equal to 1)
+
+$$\sum_{n=0}^{N-1}r^n=\frac{1-r^N}{1-r}$$
+
+Infinite sum ($|r|<1$)
+
+$$\sum_{n=0}^{\infty}r^n=\frac{1}{1-r}$$
+
+Rectangular sequence starting at n=0
+
+$$r_N[n]=1,\quad 0\le n<N$$
+
+$$R_N(e^{j\omega})=e^{-j\omega(N-1)/2}\frac{\sin(N\omega/2)}{\sin(\omega/2)}$$
+
+At $\omega=0$, the limiting value is N.
+
+Symmetric rectangle (N=2M+1)
+
+$$r[n]=1,\quad -M\le n\le M$$
+
+$$D_N(\omega)=\frac{\sin(N\omega/2)}{\sin(\omega/2)}$$
+
+$$R(e^{j\omega})=D_N(\omega)$$
+
+Periodic sinc-like function is also called a Dirichlet kernel.
+
+At $\omega=2\pi m$, use $D_N(\omega)=N$ by continuity.
+
+Finite centered sine, $-M\le n\le M$:
+
+$$x[n]=\sin(\omega_0 n)r[n]$$
+
+$$X(e^{j\omega})=\frac{D_N(\omega-\omega_0)-D_N(\omega+\omega_0)}{2j}$$
+
+Finite centered cosine, $-M\le n\le M$:
+
+$$x[n]=\cos(\omega_0 n)r[n]$$
+
+$$X(e^{j\omega})=\frac{D_N(\omega-\omega_0)+D_N(\omega+\omega_0)}{2}$$
+
+The two shifted kernels center near $\omega=\pm\omega_0$. Truncation spreads the spectrum, and exact magnitude peaks may shift.
+
+Odd finite-sine expansion
+
+$$X(e^{j\omega})=-2j\sum_{n=1}^{M}\sin(\omega_0 n)\sin(\omega n)$$
+
+For a finite sine symmetric about 0:
+
+$$X(e^{j0})=X(e^{j\pi})=0$$
+
+Frequency content:
+
+Dominant: large $|X(e^{j\omega})|$.
+
+Weak: small nonzero $|X(e^{j\omega})|$.
+
+Absent: $X(e^{j\omega})=0$.
