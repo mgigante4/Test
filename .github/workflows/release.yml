@@ -33,7 +33,7 @@ jobs:
         run: |
           curl -L -o CEdev-Linux.tar.gz https://github.com/CE-Programming/toolchain/releases/download/v14.2/CEdev-Linux.tar.gz
           tar -xzf CEdev-Linux.tar.gz
-          echo "${{ env.CEDEV_BIN }}" >> $GITHUB_PATH
+          echo "${{ env.CEDEV_BIN }}" >> "$GITHUB_PATH"
 
       - name: Build pack AppVars
         run: python3 tools/build_pack.py
@@ -50,28 +50,78 @@ jobs:
           cp external/libtexce/assets/TeXFonts.8xv external/libtexce/assets/TeXScrpt.8xv bundle_inputs/
           find build/ce -name '*.8xp' -exec cp {} bundle_inputs/ \;
 
-      - name: Build single-file group bundle
+      # First try exactly the original, one-file auto-extracting bundle.
+      # If convbin reports 'Input too large', divide the inputs and retry.
+      # All groups use the same AppVar names; send ALL .8xg files to the TI-84 CE.
+      - name: Build groups (automatically split oversized bundle)
+        shell: bash
         run: |
-          shopt -s nullglob
-          files=(bundle_inputs/*.8xv bundle_inputs/*.8xp)
-          if [ ${#files[@]} -eq 0 ]; then
-            echo "::error::No .8xp/.8xv files found to bundle"
-            exit 1
-          fi
-          cmd=(convbin --oformat 8xg-auto-extract --output artifact/NOTES_BUNDLE.8xg)
-          for f in "${files[@]}"; do
-            cmd+=(--iformat 8x --input "$f")
-          done
-          "${cmd[@]}"
+          python3 - <<'PY'
+          import pathlib
+          import subprocess
+          import sys
 
-      - name: Upload artifact bundle
+          source = pathlib.Path('bundle_inputs')
+          dest = pathlib.Path('artifact')
+          dest.mkdir(exist_ok=True)
+          files = sorted([*source.glob('*.8xv'), *source.glob('*.8xp')])
+          if not files:
+              sys.exit('No .8xv/.8xp files found')
+
+          def try_group(items, output):
+              cmd = ['convbin', '--oformat', '8xg-auto-extract', '--output', str(output)]
+              for file in items:
+                  cmd += ['--iformat', '8x', '--input', str(file)]
+              result = subprocess.run(cmd, capture_output=True, text=True)
+              if result.returncode != 0:
+                  output.unlink(missing_ok=True)
+                  return False, (result.stderr or result.stdout).strip()
+              return True, ''
+
+          single = dest / 'NOTES_BUNDLE.8xg'
+          success, error = try_group(files, single)
+          if success:
+              print(f'Success: {single} ({len(files)} files)')
+          else:
+              print(f'Original one-file bundle failed: {error}')
+              print('Dividing the calculator files into smaller transfer groups.')
+              groups = []
+              def split_until_builds(items):
+                  test = dest / '_GROUP_TEST.8xg'
+                  ok, reason = try_group(items, test)
+                  if ok:
+                      groups.append((items, test.read_bytes()))
+                      test.unlink()
+                      return
+                  if len(items) == 1:
+                      raise RuntimeError(f'Even one file cannot be bundled: {items[0]}: {reason}')
+                  mid = len(items) // 2
+                  split_until_builds(items[:mid])
+                  split_until_builds(items[mid:])
+
+              split_until_builds(files)
+              for i, (items, data) in enumerate(groups, 1):
+                  output = dest / f'NOTES_PART_{i:02d}.8xg'
+                  output.write_bytes(data)
+                  print(f'Created {output}: {len(items)} input files, {len(data)} bytes')
+
+          outputs = sorted(dest.glob('*.8xg'))
+          if not outputs:
+              sys.exit('No group files created')
+          print('Transfer EVERY .8xg output file to your calculator:')
+          for output in outputs:
+              print(' ', output)
+          PY
+
+      - name: Upload artifact bundles
         uses: actions/upload-artifact@v4
         with:
           name: notes-template-artifacts
-          path: artifact/NOTES_BUNDLE.8xg
+          path: artifact/*.8xg
+          if-no-files-found: error
 
       - name: Publish to release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: artifact/NOTES_BUNDLE.8xg
+          files: artifact/*.8xg
