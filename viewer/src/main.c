@@ -288,47 +288,47 @@ static void view_chunk_tex(const NtxNoteEntry* note, uint16_t chunk_index, TeX_R
 	int total_h = layout ? tex_get_total_height(layout) : 0;
 	int max_scroll = (total_h > viewport_h) ? (total_h - viewport_h) : 0;
 
-	bool prev_up = false;
-	bool prev_down = false;
-	bool prev_clear = false;
-	bool prev_2nd = false;
+	    // FAST CONTINUOUS SCROLLING
 
-	while (true)
-	{
-		kb_Scan();
-		bool now_up = (kb_Data[7] & kb_Up) != 0;
-		bool now_down = (kb_Data[7] & kb_Down) != 0;
-		bool now_clear = (kb_Data[6] & kb_Clear) != 0;
-		bool now_2nd = (kb_Data[1] & kb_2nd) != 0;
+    bool prev_clear = false;
+    bool prev_2nd = false;
 
-		bool up_press = now_up && !prev_up;
-		bool down_press = now_down && !prev_down;
-		bool clear_press = now_clear && !prev_clear;
-		bool second_press = now_2nd && !prev_2nd;
+    while (true)
+    {
+        kb_Scan();
 
-		prev_up = now_up;
-		prev_down = now_down;
-		prev_clear = now_clear;
-		prev_2nd = now_2nd;
+        bool now_up = (kb_Data[7] & kb_Up) != 0;
+        bool now_down = (kb_Data[7] & kb_Down) != 0;
+        bool now_clear = (kb_Data[6] & kb_Clear) != 0;
+        bool now_2nd = (kb_Data[1] & kb_2nd) != 0;
 
-		if (now_up && scroll_y > 0)
-		{
-		    scroll_y -= 20;
-		
-		    if (scroll_y < 0)
-		        scroll_y = 0;
-		}
-		
-		if (now_down && scroll_y < max_scroll)
-		{
-		    scroll_y += 20;
-		
-		    if (scroll_y > max_scroll)
-		        scroll_y = max_scroll;
-		}
-		
-		if (clear_press || second_press)
-			break;
+        bool clear_press = now_clear && !prev_clear;
+        bool second_press = now_2nd && !prev_2nd;
+
+        prev_clear = now_clear;
+        prev_2nd = now_2nd;
+
+        // HOLD UP TO SCROLL UP
+        if (now_up && scroll_y > 0)
+        {
+            scroll_y -= 20;
+
+            if (scroll_y < 0)
+                scroll_y = 0;
+        }
+
+        // HOLD DOWN TO SCROLL DOWN
+        if (now_down && scroll_y < max_scroll)
+        {
+            scroll_y += 20;
+
+            if (scroll_y > max_scroll)
+                scroll_y = max_scroll;
+        }
+
+        // EXIT NOTES
+        if (clear_press || second_press)
+            break;
 
 		gfx_FillScreen(COL_BG);
 		gfx_SetTextFGColor(COL_FG);
