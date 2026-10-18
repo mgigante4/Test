@@ -1,0 +1,155 @@
+Z-TRANSFORMS AND BLOCK DIAGRAMS
+
+Z-transform (bilateral)
+
+$$X(z)=\sum_{n=-\infty}^{\infty}x[n]z^{-n}$$
+
+For causal sequences, sum from n=0 upward.
+
+Inverse Z-transform: find sequence from X(z), usually using known pairs, partial fractions, or power series.
+
+BASIC Z-TRANSFORM PAIRS
+
+$$\delta[n]\Leftrightarrow 1$$
+
+$$\delta[n-k]\Leftrightarrow z^{-k}$$
+
+$$a^n u[n]\Leftrightarrow\frac{1}{1-az^{-1}}$$
+
+The causal exponential has ROC $|z|>|a|$.
+
+$$a^{n-k}u[n-k]$$
+
+$$\Leftrightarrow \frac{z^{-k}}{1-az^{-1}}$$
+
+$$a^nu[n-k]\Leftrightarrow\frac{a^kz^{-k}}{1-az^{-1}}$$
+
+Z-TRANSFORM PROPERTIES
+
+$$x[n-k]\Leftrightarrow z^{-k}X(z)$$
+
+$$Ax[n]+By[n]\Leftrightarrow AX(z)+BY(z)$$
+
+$$x[n]*h[n]\Leftrightarrow X(z)H(z)$$
+
+Here * means linear convolution.
+
+For a stable LTI system, evaluate on the unit circle:
+
+$$H(e^{j\omega})=H(z)|_{z=e^{j\omega}}$$
+
+A DELAY IN A BLOCK DIAGRAM
+
+$$z^{-1}=\text{one sample delay}$$
+
+$$z^{-k}=\text{k sample delays}$$
+
+An adder adds incoming branches. A multiplier (gain block) multiplies by its tap coefficient.
+
+TRANSFER FUNCTION FROM DIFFERENCE EQUATION
+
+Assume zero initial conditions. Normalize the coefficient of y[n] to 1:
+
+$$y[n]+\sum_{k=1}^{N}a_ky[n-k]$$
+
+$$=\sum_{k=0}^{M}b_kx[n-k]$$
+
+Then
+
+$$H(z)=\frac{Y(z)}{X(z)}$$
+
+$$H(z)=\frac{\sum_{k=0}^{M}b_kz^{-k}}{1+\sum_{k=1}^{N}a_kz^{-k}}$$
+
+MOST IMPORTANT RULE: FLIP DENOMINATOR SIGNS FOR FEEDBACK TAPS!
+
+To draw the diagram, solve for y[n]:
+
+$$y[n]=\sum_{k=0}^{M}b_kx[n-k]$$
+
+$$-\sum_{k=1}^{N}a_ky[n-k]$$
+
+So numerator gains are $b_k$; feedback gains are $-a_k$.
+
+This sign flip happens because the delayed output terms are moved to the right-hand side.
+
+Example:
+
+$$H(z)=\frac{1+2z^{-1}}{1-0.6z^{-1}+0.2z^{-2}}$$
+
+Multiply across:
+
+$$Y(1-0.6z^{-1}+0.2z^{-2})$$
+
+$$=X(1+2z^{-1})$$
+
+Inverse Z-transform:
+
+$$y[n]-0.6y[n-1]+0.2y[n-2]$$
+
+$$=x[n]+2x[n-1]$$
+
+Solve for output:
+
+$$y[n]=x[n]+2x[n-1]$$
+
+$$+0.6y[n-1]-0.2y[n-2]$$
+
+DRAW ITS DIRECT-FORM I DIAGRAM
+
+1. Input path: x[n] through delay blocks $z^{-1}$; sum gains +1 and +2 into the output adder.
+
+2. Output feedback: branch y[n] through one delay for y[n-1], gain +0.6; two delays for y[n-2], gain -0.2.
+
+3. All four weighted terms enter the SAME adder to produce y[n].
+
+The denominator coefficients are [1, -0.6, +0.2]. The feedback branch gains are [+0.6, -0.2]. Do NOT flip the numerator signs.
+
+DIRECT-FORM II (SHARED DELAYS)
+
+$$w[n]=x[n]-\sum_{k=1}^{N}a_kw[n-k]$$
+
+$$y[n]=\sum_{k=0}^{M}b_kw[n-k]$$
+
+Uses a shared delay line with order max(M,N), instead of separate input and output delay chains.
+
+FROM DIAGRAM TO H(z)
+
+1. Each delay is z^-1.
+
+2. Write the adder's difference equation, including the ACTUAL signs on feedback branches.
+
+3. Transform each delay: x[n-k] becomes z^-k X(z).
+
+4. Collect all Y(z) terms on the left, all X(z) terms on the right, and divide Y(z)/X(z).
+
+BLOCK CONNECTIONS
+
+Cascade (series):
+
+$$H(z)=H_1(z)H_2(z)$$
+
+Parallel (sum):
+
+$$H(z)=H_1(z)+H_2(z)$$
+
+Negative feedback with forward G(z) and return F(z):
+
+$$H(z)=\frac{G(z)}{1+G(z)F(z)}$$
+
+Positive feedback:
+
+$$H(z)=\frac{G(z)}{1-G(z)F(z)}$$
+
+Do not confuse the sign at a feedback summing junction with the sign-flip rule when rearranging a denominator into a difference equation.
+
+POLES, ZEROS, STABILITY
+
+Zeros: roots of the numerator of H(z).
+
+Poles: roots of the denominator of H(z).
+
+For a causal rational LTI filter, BIBO stability requires all actual poles inside the unit circle:
+
+$$|p_k|<1$$
+
+For FIR, the output only uses a finite number of input samples; for IIR, feedback usually produces an infinite impulse response.

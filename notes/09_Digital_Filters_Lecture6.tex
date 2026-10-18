@@ -1,0 +1,177 @@
+DIGITAL FILTERS - LECTURE 6
+
+FILTERS AND DIFFERENCE EQUATIONS
+
+$$y[n]=\sum_{k=0}^{M}b_kx[n-k]-\sum_{k=1}^{N}a_ky[n-k]$$
+
+$$H(z)=\frac{\sum_{k=0}^{M}b_kz^{-k}}{1+\sum_{k=1}^{N}a_kz^{-k}}$$
+
+$$H(e^{j\omega})=H(z)|_{z=e^{j\omega}}$$
+
+Frequency response gives steady-state output of a sinusoid:
+
+$$x[n]=A\cos(\omega_0n+\phi)$$
+
+$$y[n]=A|H(e^{j\omega_0})|$$
+
+$$\cos(\omega_0n+\phi+\theta(\omega_0))$$
+
+Here $\theta(\omega)=\arg H(e^{j\omega})$.
+
+Gain in dB:
+
+$$G(\omega)=20\log_{10}|H(e^{j\omega})|$$
+
+Equivalent:
+
+$$G(\omega)=10\log_{10}|H(e^{j\omega})|^2$$
+
+At the -3 dB cutoff for unity passband gain:
+
+$$|H(e^{j\omega_c})|=\frac{1}{\sqrt{2}}$$
+
+$$|H(e^{j\omega_c})|^2=\frac12$$
+
+$\omega=2\pi f/F_s$ radians/sample.
+
+IDEAL FILTER FREQUENCY RANGES
+
+Lowpass: pass $|\omega|<\omega_c$; stop above $\omega_c$ to $\pi$.
+
+Highpass: stop below $\omega_c$; pass above $\omega_c$ to $\pi$.
+
+Bandpass: pass $\omega_1<|\omega|<\omega_2$.
+
+Bandstop: reject $\omega_1<|\omega|<\omega_2$.
+
+PHASE DELAY AND GROUP DELAY
+
+$$\tau_p(\omega)=-\frac{\theta(\omega)}{\omega}$$
+
+$$\tau_g(\omega)=-\frac{d\theta(\omega)}{d\omega}$$
+
+$\tau_p$ is phase delay, $\tau_g$ is envelope/group delay, measured in samples. Use unwrapped phase when differentiating.
+
+Pure delay:
+
+$$H(e^{j\omega})=e^{-j\omega D}$$
+
+$$\theta(\omega)=-\omega D$$
+
+$$\tau_p=\tau_g=D$$
+
+FIR FILTER AND LINEAR PHASE
+
+$$H(z)=\sum_{n=0}^{N}h[n]z^{-n}$$
+
+There are N+1 coefficients and linear-phase delay $D=N/2$ for a symmetric or antisymmetric FIR (away from phase jumps).
+
+Symmetric:
+
+$$h[n]=h[N-n]$$
+
+Antisymmetric:
+
+$$h[n]=-h[N-n]$$
+
+Linear phase factor:
+
+$$H(e^{j\omega})=e^{-j\omega N/2}A(\omega)$$
+
+For symmetric FIR $A(\omega)$ is real. For antisymmetric FIR the amplitude factor is imaginary.
+
+FOUR LINEAR-PHASE FIR TYPES
+
+Type I: symmetric, odd number of taps (N even). No forced zero at DC or Nyquist.
+
+Type II: symmetric, even number of taps (N odd). Must have H(-1)=0, i.e., zero at $\omega=\pi$.
+
+Type III: antisymmetric, odd number of taps (N even). Zeros at $\omega=0$ and $\omega=\pi$.
+
+Type IV: antisymmetric, even number of taps (N odd). Must have zero at $\omega=0$.
+
+SIMPLE FIRST-ORDER FIR LOWPASS
+
+$$H_{LP}(z)=\frac12(1+z^{-1})$$
+
+$$H_{LP}(e^{j\omega})=e^{-j\omega/2}\cos(\omega/2)$$
+
+For $0\le\omega\le\pi$:
+
+$$|H_{LP}|=\cos(\omega/2)$$
+
+$$\omega_c=\frac{\pi}{2}$$
+
+M lowpass sections in cascade:
+
+$$H_M(z)=[H_{LP}(z)]^M$$
+
+$$|H_M|=\cos^M(\omega/2)$$
+
+$$\omega_c=2\arccos(2^{-1/(2M)})$$
+
+SIMPLE FIRST-ORDER FIR HIGHPASS
+
+$$H_{HP}(z)=\frac12(1-z^{-1})$$
+
+$$H_{HP}(e^{j\omega})=je^{-j\omega/2}\sin(\omega/2)$$
+
+$$|H_{HP}|=\sin(\omega/2)$$
+
+FIRST-ORDER IIR LOWPASS
+
+$$H_{LP}(z)=\frac{1-\alpha}{2}\frac{1+z^{-1}}{1-\alpha z^{-1}}$$
+
+$$|H_{LP}|^2=\frac{(1-\alpha)^2(1+\cos\omega)}{2(1+\alpha^2-2\alpha\cos\omega)}$$
+
+For the -3 dB cutoff:
+
+$$\cos\omega_c=\frac{2\alpha}{1+\alpha^2}$$
+
+$$\alpha=\frac{\cos\omega_c}{1+\sin\omega_c}$$
+
+Stable causal case: $|\alpha|<1$.
+
+FIRST-ORDER IIR HIGHPASS
+
+$$H_{HP}(z)=\frac{1+\alpha}{2}\frac{1-z^{-1}}{1-\alpha z^{-1}}$$
+
+$$|H_{HP}|^2=\frac{(1+\alpha)^2(1-\cos\omega)}{2(1+\alpha^2-2\alpha\cos\omega)}$$
+
+Same -3 dB design relation:
+
+$$\cos\omega_c=\frac{2\alpha}{1+\alpha^2}$$
+
+SECOND-ORDER IIR BANDPASS
+
+$$H_{BP}(z)=\frac{1-\alpha}{2}$$
+
+$$\frac{1-z^{-2}}{1-\beta(1+\alpha)z^{-1}+\alpha z^{-2}}$$
+
+Center frequency:
+
+$$\omega_0=\arccos(\beta)$$
+
+Bandwidth between its -3 dB frequencies:
+
+$$B_\omega=\arccos\left(\frac{2\alpha}{1+\alpha^2}\right)$$
+
+SECOND-ORDER IIR BANDSTOP
+
+$$H_{BS}(z)=\frac{1+\alpha}{2}$$
+
+$$\frac{1-2\beta z^{-1}+z^{-2}}{1-\beta(1+\alpha)z^{-1}+\alpha z^{-2}}$$
+
+Notch center:
+
+$$\omega_0=\arccos(\beta)$$
+
+POLE-ZERO INTERPRETATION
+
+$$H(z)=C\frac{\prod_{m=1}^{M}(z-\zeta_m)}{\prod_{k=1}^{N}(z-p_k)}z^{N-M}$$
+
+At $z=e^{j\omega}$:
+
+$$|H|=|C|\frac{\prod_m|e^{j\omega}-\zeta_m|}{\prod_k|e^{j\omega}-p_k|}$$
+
+A zero on the unit circle blocks its frequency. A pole near the unit circle tends to strengthen nearby frequencies. For causal stability, all poles must be inside $|z|<1$.

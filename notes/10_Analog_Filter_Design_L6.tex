@@ -1,0 +1,123 @@
+ANALOG FILTER DESIGN - LECTURE 6
+
+These formulas use analog rad/s $\Omega$ and $H_a(s)$, NOT discrete rad/sample $\omega$ and H(z).
+
+PASSBAND AND STOPBAND SPECS
+
+Passband tolerance $\delta_p$:
+
+$$1-\delta_p\le |H_a(j\Omega)|\le1+\delta_p$$
+
+Stopband tolerance $\delta_s$:
+
+$$|H_a(j\Omega)|\le\delta_s$$
+
+Passband/stopband attenuation in dB:
+
+$$A_p=-20\log_{10}(1-\delta_p)$$
+
+$$A_s=-20\log_{10}(\delta_s)$$
+
+Passband edge $\Omega_p$; stopband edge $\Omega_s$. Transition ratio $k=\Omega_p/\Omega_s$.
+
+BUTTERWORTH LOWPASS
+
+Maximally flat passband.
+
+$$|H_a(j\Omega)|^2=\frac{1}{1+(\Omega/\Omega_c)^{2N}}$$
+
+At $\Omega=\Omega_c$:
+
+$$|H_a|^2=\frac12$$
+
+$$G(\Omega_c)=-3.0103\text{ dB}$$
+
+The minimum order from dB specifications is:
+
+$$N\ge\frac{\log_{10}\left(\frac{10^{A_s/10}-1}{10^{A_p/10}-1}\right)}{2\log_{10}(\Omega_s/\Omega_p)}$$
+
+Round N UP to the next integer.
+
+One order increase changes high-frequency attenuation by approximately 6 dB per octave.
+
+CHEBYSHEV TYPE I
+
+Ripple in passband; monotonic stopband.
+
+$$|H_a(j\Omega)|^2=\frac{1}{1+\epsilon^2T_N^2(\Omega/\Omega_p)}$$
+
+$$\epsilon=\sqrt{10^{A_p/10}-1}$$
+
+For $|v|\le1$:
+
+$$T_N(v)=\cos(N\arccos v)$$
+
+For $v\ge1$:
+
+$$T_N(v)=\cosh(N\cosh^{-1}v)$$
+
+Calculator-friendly recursion:
+
+$$T_0(v)=1,\quad T_1(v)=v$$
+
+$$T_N(v)=2vT_{N-1}(v)-T_{N-2}(v)$$
+
+Chebyshev-I order formula:
+
+$$N\ge\frac{\cosh^{-1}\left(\sqrt{\frac{10^{A_s/10}-1}{10^{A_p/10}-1}}\right)}{\cosh^{-1}(\Omega_s/\Omega_p)}$$
+
+Round UP.
+
+CHEBYSHEV TYPE II
+
+Monotonic passband; ripple in stopband. Unlike Type I, Type II can have finite-frequency transmission zeros.
+
+ELLIPTIC FILTER
+
+Ripple in both passband AND stopband. Sharp transition for a given order; poles and stopband zeros shape the response.
+
+BESSEL FILTER
+
+Designed for flat group delay / nearly linear phase, at the expense of slower magnitude rolloff.
+
+$$H_a(s)=\frac{b_0}{B_N(s)}$$
+
+Bessel polynomials (unnormalized):
+
+$$B_0(s)=1,\quad B_1(s)=s+1$$
+
+$$B_N(s)=(2N-1)B_{N-1}(s)+s^2B_{N-2}(s)$$
+
+ANALOG FILTER FREQUENCY TRANSFORMS
+
+Start from normalized lowpass prototype $H_{LP}(s)$.
+
+Lowpass scaled to $\Omega_c$:
+
+$$H(s)=H_{LP}(s/\Omega_c)$$
+
+Highpass with edge $\Omega_c$:
+
+$$H(s)=H_{LP}(\Omega_c/s)$$
+
+Bandpass, with center $\Omega_0$ and bandwidth B:
+
+$$H(s)=H_{LP}\left(\frac{s^2+\Omega_0^2}{Bs}\right)$$
+
+$$\Omega_0=\sqrt{\Omega_1\Omega_2}$$
+
+$$B=\Omega_2-\Omega_1$$
+
+Bandstop:
+
+$$H(s)=H_{LP}\left(\frac{Bs}{s^2+\Omega_0^2}\right)$$
+
+Useful DSP conversion (bilinear transform):
+
+$$s=\frac{2}{T_s}\frac{1-z^{-1}}{1+z^{-1}}$$
+
+This maps analog poles from the left half-plane inside the digital unit circle. It warps frequency:
+
+$$\Omega=\frac{2}{T_s}\tan(\omega/2)$$
+
+A separate analog design may use Butterworth, Chebyshev, elliptic, or Bessel prototypes. Keep analog rad/s and digital rad/sample distinct.

@@ -1,0 +1,121 @@
+CIRCULAR CONVOLUTION: FLIP + SHIFT
+
+N-point circular convolution:
+
+$$y[n]=\sum_{m=0}^{N-1}x[m]h[(n-m)\text{mod} N]$$
+
+Indices wrap around mod N. Output always has N samples.
+
+MAIN MEMORY TRICK
+
+1. Keep x[m] FIXED, always in positions 0 through N-1.
+
+2. CIRCULARLY FLIP h[m] to form h[(-m) mod N]. The h[0] entry stays at index 0.
+
+3. For output n, shift the flipped h row RIGHT by n positions (wrapping around).
+
+4. Multiply aligned entries by fixed x[m], then ADD to obtain y[n].
+
+5. Repeat until n=N-1.
+
+WORKED EXAMPLE: N=4
+
+Fixed input:
+
+$$x[m]=[1,2,3,4]$$
+
+Original impulse response:
+
+$$h[m]=[1,0,2,3]$$
+
+CIRCULAR FLIP OF h
+
+Original indices $m=0,1,2,3$:
+
+$$h[m]=[h[0],h[1],h[2],h[3]]$$
+
+Circularly flipped:
+
+$$h[(-m)\text{mod}4]$$
+
+$$=[h[0],h[3],h[2],h[1]]$$
+
+$$=[1,3,2,0]$$
+
+IMPORTANT: Flip keeps h[0] FIXED, then reverses the remaining positions. It is NOT ordinary reverse [3,2,0,1].
+
+HOLD x FIXED FOR EVERY ROW
+
+$$x=[1,2,3,4]$$
+
+For n=0, shifted/flipped h:
+
+$$h[(-m)\text{mod}4]=[1,3,2,0]$$
+
+$$y[0]=1(1)+2(3)+3(2)+4(0)$$
+
+$$y[0]=13$$
+
+For n=1, RIGHT SHIFT flipped h by 1:
+
+$$h[(1-m)\text{mod}4]=[0,1,3,2]$$
+
+$$y[1]=1(0)+2(1)+3(3)+4(2)$$
+
+$$y[1]=19$$
+
+For n=2, RIGHT SHIFT flipped h by 2:
+
+$$h[(2-m)\text{mod}4]=[2,0,1,3]$$
+
+$$y[2]=1(2)+2(0)+3(1)+4(3)$$
+
+$$y[2]=17$$
+
+For n=3, RIGHT SHIFT flipped h by 3:
+
+$$h[(3-m)\text{mod}4]=[3,2,0,1]$$
+
+$$y[3]=1(3)+2(2)+3(0)+4(1)$$
+
+$$y[3]=11$$
+
+FINAL RESULT:
+
+$$y[n]=[13,19,17,11]$$
+
+CHECK: sum of circular output = (sum x)(sum h):
+
+$$13+19+17+11=10(6)=60$$
+
+THE FLIP / SHIFT / MULTIPLY TABLE
+
+x always: [1, 2, 3, 4]
+
+n=0 h row: [1, 3, 2, 0]; dot=13.
+
+n=1 h row: [0, 1, 3, 2]; dot=19.
+
+n=2 h row: [2, 0, 1, 3]; dot=17.
+
+n=3 h row: [3, 2, 0, 1]; dot=11.
+
+Each new row is the preceding h row shifted ONE position RIGHT with wraparound. Never move the x row.
+
+DFT CIRCULAR CONVOLUTION THEOREM
+
+$$X[k]=\text{DFT}_N(x[n])$$
+
+$$H[k]=\text{DFT}_N(h[n])$$
+
+$$y[n]=\text{IDFT}_N(X[k]H[k])$$
+
+For linear convolution of finite signals of lengths Lx and Lh, zero-pad both to N at least:
+
+$$N\ge L_x+L_h-1$$
+
+Then N-point circular convolution equals the linear convolution with zero-padding. Without enough padding, circular convolution folds linear-convolution samples:
+
+$$y_{circ}[n]=\sum_r y_{lin}[n+rN]$$
+
+where the sum covers valid samples.
