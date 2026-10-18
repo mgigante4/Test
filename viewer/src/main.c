@@ -311,17 +311,21 @@ static void view_chunk_tex(const NtxNoteEntry* note, uint16_t chunk_index, TeX_R
 		prev_clear = now_clear;
 		prev_2nd = now_2nd;
 
-		if (up_press && scroll_y > 0)
+		if (now_up && scroll_y > 0)
 		{
-			scroll_y -= 10;
-			if (scroll_y < 0)
-				scroll_y = 0;
+		    scroll_y -= 20;
+		
+		    if (scroll_y < 0)
+		        scroll_y = 0;
 		}
-		if (down_press && scroll_y < max_scroll)
+		
+		if (now_down && scroll_y < max_scroll)
 		{
-			scroll_y += 10;
-			if (scroll_y > max_scroll)
-				scroll_y = max_scroll;
+		    scroll_y += 20;
+		
+		    if (scroll_y > max_scroll)
+		        scroll_y = max_scroll;
+		}
 		}
 		if (clear_press || second_press)
 			break;
